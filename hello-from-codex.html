@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello from Codex</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(circle at top, #6f9cff, #102a43 65%);
+      color: #0d1b2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 24px;
+      padding: 48px 56px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow:
+        0 30px 60px rgba(16, 42, 67, 0.35),
+        0 10px 25px rgba(16, 42, 67, 0.25);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #4c6ef5, #9775fa);
+      color: #f8f9fa;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      box-shadow: 0 10px 18px rgba(76, 110, 245, 0.35);
+    }
+
+    h1 {
+      margin: 24px 0 16px;
+      font-size: clamp(2.8rem, 4vw, 3.6rem);
+      line-height: 1.1;
+      color: #1b263b;
+    }
+
+    h1 span {
+      display: inline-block;
+      color: #4263eb;
+    }
+
+    p {
+      margin: 0 auto 28px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #33415c;
+      max-width: 32ch;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: linear-gradient(120deg, #339af0, #22b8cf);
+      color: #f8f9fa;
+      text-decoration: none;
+      box-shadow: 0 10px 25px rgba(34, 184, 207, 0.35);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(34, 184, 207, 0.45);
+    }
+
+    footer {
+      margin-top: 36px;
+      font-size: 0.9rem;
+      color: rgba(27, 38, 59, 0.75);
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">✨ Hello World</div>
+    <h1>Hello from <span>Codex</span></h1>
+    <p>
+      Welcome to a tiny splash of creativity brought to you by Codex.
+      This page is here to brighten your day with a bit of polish and a warm greeting.
+    </p>
+    <a class="cta" href="index.html">Return to Home</a>
+    <footer>Crafted with care · Codex Labs</footer>
+  </main>
+</body>
+</html>
