@@ -15,7 +15,7 @@ jobs:
         github.event_name == 'pull_request_review_comment'
       ) &&
       contains(github.event.comment.body, '@codex-fix') &&
-      contains(fromJSON('["mikem29"]'), github.event.comment.user.login)
+      contains(fromJSON('["coleam00", "mikem29"]'), github.event.comment.user.login)
 
     runs-on: ubuntu-latest
 
@@ -153,7 +153,7 @@ jobs:
         github.event_name == 'pull_request_review_comment'
       ) &&
       contains(github.event.comment.body, '@codex-fix') &&
-      !contains(fromJSON('["coleam00"]'), github.event.comment.user.login)
+      !contains(fromJSON('["coleam00", "mikem29"]'), github.event.comment.user.login)
 
     runs-on: ubuntu-latest
 
