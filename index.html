@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered GitHub Actions Workflows - Automated Issue Fixing & PR Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 60px 20px 40px;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header .subtitle {
+            font-size: 1.5em;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        header .tagline {
+            font-size: 1.1em;
+            opacity: 0.85;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        h4 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .agent-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        .agent-card h4 {
+            color: white;
+            margin-top: 0;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .agent-card .trigger {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .workflow-diagram {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e8ebff;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .keyword {
+            color: #569cd6;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-top: 4px solid #764ba2;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            background: #e8ebff;
+            transform: translateY(-5px);
+        }
+
+        .feature-box h4 {
+            color: #764ba2;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .alert-box.info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+
+        .alert-box.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .alert-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .permission-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .permission-card {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .permission-card h5 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .permission-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .permission-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .permission-card li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .arrow-down {
+            text-align: center;
+            color: #764ba2;
+            font-size: 2.5em;
+            margin: 15px 0;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 12px 30px;
+            border-radius: 25px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+
+            .content-card {
+                padding: 25px;
+            }
+
+            .agent-grid, .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tab-container {
+            margin: 30px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: #e8ebff;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Powered GitHub Actions</h1>
+            <p class="subtitle">Automated Issue Fixing & Pull Request Review</p>
+            <p class="tagline">Leverage Claude Code, OpenAI Codex, and Cursor AI to automatically fix bugs and review code</p>
+        </header>
+
+        <div class="content-card">
+            <h2>What Are AI-Powered GitHub Actions?</h2>
+            <p>These GitHub Actions workflows enable you to trigger AI coding assistants directly from GitHub issues and pull requests. Simply mention an AI agent in a comment, and the workflow automatically:</p>
+            <ul>
+                <li>Analyzes the issue or pull request context</li>
+                <li>Reads relevant code and files from your repository</li>
+                <li>Generates fixes or provides comprehensive code reviews</li>
+                <li>Creates pull requests with the fixes or posts detailed reviews</li>
+                <li>Comments back with results and links to the work done</li>
+            </ul>
+
+            <div class="alert-box success">
+                <strong>Production-Ready</strong>
+                <p>These workflows are battle-tested in real projects and include security controls, permission management, and authorization checks to ensure only authorized users can trigger AI agents.</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>The Three AI Agents</h2>
+            <div class="agent-grid">
+                <div class="agent-card">
+                    <div class="icon">🤖</div>
+                    <h4>Claude Code</h4>
+                    <p>Anthropic's Claude AI with advanced code understanding and generation capabilities. Excellent for complex refactoring and architectural changes.</p>
+                    <div class="trigger">@claude-fix</div>
+                    <div class="trigger">@claude-review</div>
+                    <p style="margin-top: 15px;"><strong>Best for:</strong> Complex bugs, architectural improvements, thorough code reviews</p>
+                </div>
+
+                <div class="agent-card">
+                    <div class="icon">🧠</div>
+                    <h4>OpenAI Codex</h4>
+                    <p>OpenAI's powerful code-specialized model. Great for standard bug fixes and implementing well-defined features.</p>
+                    <div class="trigger">@codex-fix</div>
+                    <div class="trigger">@codex-review</div>
+                    <p style="margin-top: 15px;"><strong>Best for:</strong> Quick fixes, standard patterns, adding tests</p>
+                </div>
+
+                <div class="agent-card">
+                    <div class="icon">⚡</div>
+                    <h4>Cursor AI</h4>
+                    <p>Fast and efficient AI coding assistant optimized for quick iterations and rapid development cycles.</p>
+                    <div class="trigger">@cursor-fix</div>
+                    <div class="trigger">@cursor-review</div>
+                    <p style="margin-top: 15px;"><strong>Best for:</strong> Rapid prototyping, quick iterations, straightforward fixes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>How It Works: The Complete Workflow</h2>
+
+            <div class="workflow-diagram">
+                <h3>Fix Workflow (Write Access)</h3>
+
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Trigger via Comment</h4>
+                        <p>An authorized user comments on an issue or pull request with a trigger phrase like <code>@claude-fix</code>, <code>@codex-fix</code>, or <code>@cursor-fix</code>.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Authorization Check</h4>
+                        <p>The workflow verifies that the user is in the authorized list. If not authorized, it posts a message explaining that only maintainers can trigger the workflow.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Context Loading</h4>
+                        <p>The workflow loads the issue fix prompt template, gathers GitHub context (repository, issue/PR number, triggering user), and fetches full issue/PR details including comments.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>AI Agent Execution</h4>
+                        <p>The AI agent runs with write access to the repository. It:</p>
+                        <ul>
+                            <li>Reads the issue description and all comments</li>
+                            <li>Searches the codebase for relevant files</li>
+                            <li>Performs root cause analysis</li>
+                            <li>Implements a minimal, focused fix</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Pull Request Creation</h4>
+                        <p>The agent creates a new branch, commits the changes, and opens a pull request with:</p>
+                        <ul>
+                            <li>Clear title describing the fix</li>
+                            <li>Detailed description of the root cause</li>
+                            <li>Explanation of the changes made</li>
+                            <li>Links back to the original issue</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Issue Comment</h4>
+                        <p>The workflow posts a comment on the original issue with a link to the newly created pull request, notifying the team that a fix is ready for review.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-diagram" style="margin-top: 40px;">
+                <h3>Review Workflow (Read-Only)</h3>
+
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Trigger via Comment</h4>
+                        <p>An authorized user comments on a pull request with a trigger phrase like <code>@claude-review</code>, <code>@codex-review</code>, or <code>@cursor-review</code>.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Authorization & Context</h4>
+                        <p>After authorization check, the workflow loads the PR review prompt template with GitHub context and PR details.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>AI Code Review</h4>
+                        <p>The AI agent performs a comprehensive code review with read-only access, analyzing:</p>
+                        <ul>
+                            <li>Code quality and best practices</li>
+                            <li>Security vulnerabilities</li>
+                            <li>Performance considerations</li>
+                            <li>Test coverage gaps</li>
+                            <li>Architectural concerns</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Review Posted</h4>
+                        <p>The workflow posts a detailed review comment on the PR with structured feedback including critical issues, important suggestions, and minor improvements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Key Features & Capabilities</h2>
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="icon">🔐</div>
+                    <h4>Security First</h4>
+                    <p>Authorization checks ensure only approved maintainers can trigger workflows. Unauthorized attempts receive clear rejection messages.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon">🎯</div>
+                    <h4>Context-Aware</h4>
+                    <p>AI agents receive full context including repository structure, issue/PR details, comments, and relevant documentation.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon">⚙️</div>
+                    <h4>Configurable Permissions</h4>
+                    <p>Separate permission sets for fix (write) and review (read-only) workflows ensure appropriate access levels.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon">📝</div>
+                    <h4>Detailed Logging</h4>
+                    <p>Every workflow run is logged with full context, making it easy to debug and audit AI agent actions.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon">🔄</div>
+                    <h4>Automated Workflow</h4>
+                    <p>From trigger to PR creation or review posting, everything happens automatically without manual intervention.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon">🚀</div>
+                    <h4>Fast Iterations</h4>
+                    <p>Quick turnaround time from issue report to potential fix, dramatically reducing time to resolution.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Workflow Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Workflow Type</th>
+                        <th>Access Level</th>
+                        <th>Trigger Phrases</th>
+                        <th>Main Actions</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Claude Fix</strong></td>
+                        <td>Write (contents, PRs, issues)</td>
+                        <td>@claude-fix</td>
+                        <td>Read code, implement fix, create branch & PR</td>
+                        <td>Pull request with fix</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude Review</strong></td>
+                        <td>Read-only (comments allowed)</td>
+                        <td>@claude-review</td>
+                        <td>Analyze PR changes, review code quality & security</td>
+                        <td>Detailed review comment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Codex Fix</strong></td>
+                        <td>Write (contents, PRs, issues)</td>
+                        <td>@codex-fix</td>
+                        <td>Analyze issue, implement solution, create PR</td>
+                        <td>Pull request with fix</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Codex Review</strong></td>
+                        <td>Read-only (comments allowed)</td>
+                        <td>@codex-review</td>
+                        <td>Review PR for bugs, patterns, and improvements</td>
+                        <td>Review comment with feedback</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cursor Fix</strong></td>
+                        <td>Write (contents, PRs, issues)</td>
+                        <td>@cursor-fix</td>
+                        <td>Quick fix implementation and PR creation</td>
+                        <td>Pull request with fix</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cursor Review</strong></td>
+                        <td>Read-only (comments allowed)</td>
+                        <td>@cursor-review</td>
+                        <td>Fast code review and feedback</td>
+                        <td>Review comment</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-card">
+            <h2>Permission Model</h2>
+            <div class="permission-matrix">
+                <div class="permission-card">
+                    <h5>Fix Workflows (Write Access)</h5>
+                    <ul>
+                        <li>contents: write</li>
+                        <li>pull-requests: write</li>
+                        <li>issues: write</li>
+                        <li>id-token: write</li>
+                        <li>actions: read</li>
+                    </ul>
+                </div>
+
+                <div class="permission-card">
+                    <h5>Review Workflows (Read-Only)</h5>
+                    <ul>
+                        <li>contents: read</li>
+                        <li>pull-requests: write (comments only)</li>
+                        <li>issues: write (comments only)</li>
+                        <li>id-token: write</li>
+                        <li>actions: read</li>
+                    </ul>
+                </div>
+
+                <div class="permission-card">
+                    <h5>Unauthorized Handler</h5>
+                    <ul>
+                        <li>issues: write (rejection messages)</li>
+                        <li>pull-requests: write (rejection messages)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert-box info">
+                <strong>Security Note:</strong>
+                <p>The write permissions for "issues" and "pull-requests" in review workflows are limited to creating comments only. AI agents in review mode cannot modify code or create branches.</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Setup Instructions</h2>
+
+            <h3>1. Copy Workflow Files</h3>
+            <p>Copy all files from the <code>.github</code> directory to your repository:</p>
+            <div class="code-block">
+.github/
+├── workflows/
+│   ├── claude-fix.yml
+│   ├── claude-review.yml
+│   ├── codex-fix.yml
+│   ├── codex-review.yml
+│   ├── cursor-fix.yml
+│   └── cursor-review.yml
+├── issue_fix_prompt.md
+├── pr_review_prompt.md
+└── pull_request_template.md
+            </div>
+
+            <h3>2. Configure Secrets</h3>
+            <p>Add the required API keys as repository secrets in GitHub Settings → Secrets and variables → Actions:</p>
+            <ul>
+                <li><strong>CLAUDE_CODE_OAUTH_TOKEN</strong> - OAuth token for Claude Code API</li>
+                <li><strong>OPENAI_API_KEY</strong> - API key for OpenAI Codex</li>
+                <li><strong>CURSOR_API_KEY</strong> - API key for Cursor AI</li>
+            </ul>
+
+            <div class="alert-box">
+                <strong>Important:</strong>
+                <p>Never commit these API keys to your repository. Always use GitHub Secrets for sensitive credentials.</p>
+            </div>
+
+            <h3>3. Authorize Users</h3>
+            <p>Edit each workflow file to add authorized users who can trigger the AI agents. Look for this section:</p>
+            <div class="code-block">
+<span class="comment"># Only trigger for authorized users</span>
+<span class="keyword">if:</span> contains(fromJSON(<span class="string">'["your-github-username"]'</span>), github.event.comment.user.login)
+            </div>
+            <p>Replace <code>"your-github-username"</code> with a list of authorized GitHub usernames.</p>
+
+            <h3>4. Customize Prompts</h3>
+            <p>The workflow behavior is controlled by two prompt templates:</p>
+            <ul>
+                <li><strong>issue_fix_prompt.md</strong> - Instructions for fix workflows</li>
+                <li><strong>pr_review_prompt.md</strong> - Instructions for review workflows</li>
+            </ul>
+            <p>Edit these files to customize how AI agents analyze issues and review code for your specific project needs.</p>
+
+            <h3>5. Test the Workflows</h3>
+            <p>Create a test issue and try triggering an AI agent:</p>
+            <ol>
+                <li>Create a GitHub issue describing a bug or improvement</li>
+                <li>Comment on the issue with <code>@claude-fix</code></li>
+                <li>Watch the Actions tab to see the workflow run</li>
+                <li>Review the resulting pull request</li>
+            </ol>
+        </div>
+
+        <div class="content-card">
+            <h2>Usage Examples</h2>
+
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="showTab('fix')">Fix Workflow</button>
+                    <button class="tab-button" onclick="showTab('review')">Review Workflow</button>
+                    <button class="tab-button" onclick="showTab('multiple')">Multiple Agents</button>
+                </div>
+
+                <div id="fix" class="tab-content active">
+                    <h3>Triggering a Fix</h3>
+                    <p>When you encounter a bug in an issue:</p>
+                    <div class="code-block">
+<span class="comment"># Issue #42: Button click handler not working</span>
+
+The submit button doesn't trigger the form submission.
+Steps to reproduce:
+1. Fill out the form
+2. Click submit button
+3. Nothing happens
+
+<span class="comment"># Comment to trigger fix:</span>
+@claude-fix Please investigate and fix this button issue
+                    </div>
+                    <p><strong>What happens next:</strong></p>
+                    <ol>
+                        <li>Claude analyzes the issue and searches for the button code</li>
+                        <li>Identifies the missing event listener</li>
+                        <li>Implements the fix</li>
+                        <li>Creates a PR with the solution</li>
+                        <li>Comments on the issue with the PR link</li>
+                    </ol>
+                </div>
+
+                <div id="review" class="tab-content">
+                    <h3>Requesting a Code Review</h3>
+                    <p>On a pull request that needs review:</p>
+                    <div class="code-block">
+<span class="comment"># PR #123: Add user authentication</span>
+
+This PR implements JWT-based authentication for the API.
+
+<span class="comment"># Comment to request review:</span>
+@claude-review Please review this authentication implementation
+                    </div>
+                    <p><strong>What happens next:</strong></p>
+                    <ol>
+                        <li>Claude reads all changed files</li>
+                        <li>Analyzes security implications</li>
+                        <li>Checks for best practices</li>
+                        <li>Reviews error handling and edge cases</li>
+                        <li>Posts a detailed review comment with findings</li>
+                    </ol>
+                </div>
+
+                <div id="multiple" class="tab-content">
+                    <h3>Using Multiple Agents</h3>
+                    <p>You can trigger multiple agents for different perspectives:</p>
+                    <div class="code-block">
+<span class="comment"># Issue #56: Performance issue with data processing</span>
+
+The data processing function is taking too long for large datasets.
+
+<span class="comment"># Get multiple perspectives:</span>
+@claude-fix Could you analyze and optimize this?
+@codex-fix Alternative approach?
+
+<span class="comment"># Or get multiple reviews:</span>
+@claude-review Focus on architectural concerns
+@codex-review Focus on performance optimizations
+                    </div>
+                    <p><strong>Benefits of multiple agents:</strong></p>
+                    <ul>
+                        <li>Different AI models may propose different solutions</li>
+                        <li>Compare approaches and choose the best one</li>
+                        <li>Get specialized feedback (architecture vs. performance)</li>
+                        <li>Learn from diverse perspectives</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Best Practices</h2>
+
+            <h3>When to Use Fix Workflows</h3>
+            <ul>
+                <li><strong>Clear, reproducible bugs</strong> - Issues with specific error messages and steps to reproduce</li>
+                <li><strong>Well-scoped improvements</strong> - Adding a specific feature or refactoring a particular component</li>
+                <li><strong>Routine maintenance</strong> - Updating dependencies, fixing linting issues, adding tests</li>
+                <li><strong>Quick wins</strong> - Simple improvements that don't require product decisions</li>
+            </ul>
+
+            <h3>When to Use Review Workflows</h3>
+            <ul>
+                <li><strong>Security-sensitive changes</strong> - Authentication, authorization, data handling</li>
+                <li><strong>Complex features</strong> - Large PRs that need thorough analysis</li>
+                <li><strong>Architectural changes</strong> - Modifications to core systems or patterns</li>
+                <li><strong>Learning opportunities</strong> - Get detailed feedback on your implementation approach</li>
+            </ul>
+
+            <h3>Tips for Better Results</h3>
+            <ul>
+                <li>Provide clear, detailed issue descriptions with examples</li>
+                <li>Include error messages, stack traces, and logs when applicable</li>
+                <li>Mention specific files or functions that might be relevant</li>
+                <li>Add context about the expected vs. actual behavior</li>
+                <li>Review AI-generated code before merging - always validate the fix</li>
+                <li>Use descriptive trigger comments to guide the AI's focus</li>
+            </ul>
+
+            <div class="alert-box">
+                <strong>Remember:</strong>
+                <p>AI agents are powerful assistants, but they're not perfect. Always review their work, run tests, and validate that fixes actually solve the problem before merging to production.</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Troubleshooting</h2>
+
+            <h3>Workflow Not Triggering</h3>
+            <ul>
+                <li>Verify you're using the exact trigger phrase (e.g., <code>@claude-fix</code>)</li>
+                <li>Check that your GitHub username is in the authorized users list</li>
+                <li>Ensure the workflow file is in <code>.github/workflows/</code></li>
+                <li>Check the Actions tab for any error messages</li>
+            </ul>
+
+            <h3>Unauthorized Error</h3>
+            <ul>
+                <li>Your username must be in the <code>fromJSON()</code> array in the workflow</li>
+                <li>Check the exact spelling of your GitHub username</li>
+                <li>Ask a repository maintainer to add you to the authorized users list</li>
+            </ul>
+
+            <h3>AI Agent Failed to Create PR</h3>
+            <ul>
+                <li>Check if API keys are correctly configured in repository secrets</li>
+                <li>Verify the AI agent had sufficient context to understand the issue</li>
+                <li>Review the workflow logs in the Actions tab for specific errors</li>
+                <li>The issue might require human judgment or product decisions</li>
+            </ul>
+
+            <h3>Review Posted But Incomplete</h3>
+            <ul>
+                <li>Large PRs may exceed token limits - consider breaking them up</li>
+                <li>Complex architectural changes might need human review</li>
+                <li>Check the workflow timeout settings (default 15-30 minutes)</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h2>Architecture Deep Dive</h2>
+
+            <h3>Workflow Structure</h3>
+            <p>Each workflow consists of three main components:</p>
+
+            <h4>1. Event Triggers</h4>
+            <div class="code-block">
+<span class="keyword">on:</span>
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+            </div>
+            <p>Workflows trigger when comments are created on issues or pull requests.</p>
+
+            <h4>2. Authorization Job</h4>
+            <div class="code-block">
+<span class="keyword">if:</span> |
+  contains(github.event.comment.body, <span class="string">'@claude-fix'</span>) &&
+  contains(fromJSON(<span class="string">'["authorized-user"]'</span>), github.event.comment.user.login)
+            </div>
+            <p>Checks that the trigger phrase is present and the user is authorized.</p>
+
+            <h4>3. AI Agent Execution</h4>
+            <ul>
+                <li><strong>Context Loading:</strong> Fetches issue/PR details and loads prompt templates</li>
+                <li><strong>Agent Invocation:</strong> Runs the AI agent with custom instructions</li>
+                <li><strong>Result Handling:</strong> Creates PR or posts review comment</li>
+                <li><strong>Notification:</strong> Updates the original issue/PR with results</li>
+            </ul>
+
+            <h3>Prompt Engineering</h3>
+            <p>The effectiveness of AI agents depends heavily on well-crafted prompts. The templates include:</p>
+            <ul>
+                <li><strong>Role Definition:</strong> Clear explanation of the agent's purpose</li>
+                <li><strong>Architecture Context:</strong> Information about the project structure</li>
+                <li><strong>Workflow Steps:</strong> Step-by-step instructions for the agent</li>
+                <li><strong>Decision Points:</strong> Guidance on when to proceed vs. ask for help</li>
+                <li><strong>Output Format:</strong> Structured format for reviews and PR descriptions</li>
+            </ul>
+
+            <h3>Security Considerations</h3>
+            <ul>
+                <li><strong>Least Privilege:</strong> Review workflows have read-only access to repository contents</li>
+                <li><strong>Authorization Lists:</strong> Only specific users can trigger workflows</li>
+                <li><strong>Secret Management:</strong> API keys stored as encrypted GitHub Secrets</li>
+                <li><strong>Audit Trail:</strong> All workflow runs are logged in the Actions tab</li>
+                <li><strong>Branch Protection:</strong> AI-created PRs still require human review before merging</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h2>Advanced Customization</h2>
+
+            <h3>Modifying Prompt Templates</h3>
+            <p>Customize <code>issue_fix_prompt.md</code> and <code>pr_review_prompt.md</code> to:</p>
+            <ul>
+                <li>Add project-specific context and architecture documentation</li>
+                <li>Include coding standards and style guidelines</li>
+                <li>Define custom review criteria and focus areas</li>
+                <li>Add links to relevant documentation</li>
+                <li>Specify testing requirements</li>
+            </ul>
+
+            <h3>Adjusting Timeout Settings</h3>
+            <div class="code-block">
+<span class="keyword">timeout-minutes:</span> <span class="string">30</span>  <span class="comment"># Fix workflows</span>
+<span class="keyword">timeout-minutes:</span> <span class="string">15</span>  <span class="comment"># Review workflows</span>
+            </div>
+            <p>Increase for complex codebases or decrease to fail faster.</p>
+
+            <h3>Tool Restrictions</h3>
+            <p>Limit which tools the AI agent can use by uncommenting and modifying the <code>allowed_tools</code> parameter:</p>
+            <div class="code-block">
+<span class="comment"># Example: Read-only tools for reviews</span>
+allowed_tools: <span class="string">"Read(*),Grep(*),Bash(git log*),Bash(git diff*)"</span>
+
+<span class="comment"># Example: Full access for fixes</span>
+allowed_tools: <span class="string">"Edit(*),Write(*),Read(*),Grep(*),Bash(git *)"</span>
+            </div>
+
+            <h3>Adding More AI Agents</h3>
+            <p>To add a new AI agent:</p>
+            <ol>
+                <li>Copy an existing workflow file (e.g., <code>claude-fix.yml</code>)</li>
+                <li>Rename it (e.g., <code>gemini-fix.yml</code>)</li>
+                <li>Update the trigger phrase and agent action</li>
+                <li>Add required API keys to repository secrets</li>
+                <li>Update the authorization list</li>
+            </ol>
+        </div>
+
+        <div class="content-card">
+            <h2>Cost Considerations</h2>
+
+            <h3>API Usage</h3>
+            <p>Each workflow run consumes API credits from the respective AI service:</p>
+            <ul>
+                <li><strong>Claude Code:</strong> Charged per token (input + output)</li>
+                <li><strong>OpenAI Codex:</strong> Charged per API call and token usage</li>
+                <li><strong>Cursor AI:</strong> Subscription-based or per-usage pricing</li>
+            </ul>
+
+            <h3>GitHub Actions Minutes</h3>
+            <p>Workflows run on GitHub Actions runners, consuming action minutes:</p>
+            <ul>
+                <li>Public repositories: Unlimited minutes</li>
+                <li>Private repositories: Limited by plan (2,000-50,000 minutes/month)</li>
+                <li>Self-hosted runners: No minute costs</li>
+            </ul>
+
+            <h3>Optimization Tips</h3>
+            <ul>
+                <li>Use review workflows more liberally (faster, cheaper)</li>
+                <li>Reserve fix workflows for well-scoped issues</li>
+                <li>Set appropriate timeout limits to avoid long-running jobs</li>
+                <li>Monitor API usage and set up billing alerts</li>
+                <li>Consider using smaller/faster models for simple tasks</li>
+            </ul>
+        </div>
+
+        <footer>
+            <h2 style="color: white; border: none; padding-bottom: 0;">Ready to Get Started?</h2>
+            <p style="font-size: 1.2em; margin: 20px 0;">Copy the workflows to your repository and start automating your development workflow!</p>
+            <div>
+                <a href="https://github.com/coleam00/PydanticAI-Research-Agent">View Original Repository</a>
+                <a href="https://docs.github.com/en/actions">GitHub Actions Docs</a>
+            </div>
+            <p style="margin-top: 30px; opacity: 0.8;">AI-Powered Development | Automated Issue Fixing & Code Review</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Add hover effects to agent cards
+        document.querySelectorAll('.agent-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05) rotateY(5deg)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotateY(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>
