@@ -1,11 +1,5 @@
-Added a new `requirements` documentation set describing the AI-assisted Drupal block designer concept.  
-- Introduced a navigation stub so contributors can discover the new documentation folder and its structure (`requirements/README.md:1`).  
-- Captured the product vision, measurable goals, scope boundaries, and core personas to anchor future solution design (`requirements/product_overview.md:1`).  
-- Detailed editor-facing requirements for asset handling, block lifecycle management, assistant interactions, governance, and accessibility checkpoints (`requirements/functional_requirements.md:1`).  
-- Outlined the expected Drupal integration patterns, AI orchestration strategy, theming alignment approach, and key risks to resolve before implementation (`requirements/technical_considerations.md:1`).
+Reorganized the requirements docs under the IndieMade hierarchy so everything now lives at `IndieMade/Features/AI Website builder/requirements/…`. Added breadcrumb READMEs (`IndieMade/README.md:1`, `IndieMade/Features/README.md:1`, `IndieMade/Features/AI Website builder/README.md:1`) to explain the structure, and refreshed the requirements overview to call out the new location (`IndieMade/Features/AI Website builder/requirements/README.md:1`). Updated `codex-output.md:1` so the change log reflects the new layout.
 
-No tests were run (documentation-only change).
+Tests not run (documentation-only change).
 
-Next steps:
-1. Review the requirements with site builders and designers to validate assumptions about workflows and theming constraints.
-2. Break the documented needs into prioritized user stories or epics for implementation planning.
+Next: 1) Update any external links or tooling that assumed the old `requirements/` path. 2) Scrub the requirement content for Drupal-specific language if the intent is to describe IndieMade.
