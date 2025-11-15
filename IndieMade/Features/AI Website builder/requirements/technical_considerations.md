@@ -14,6 +14,10 @@
 - Maintain metadata taxonomy vocabularies for asset tagging so AI queries can retrieve assets based on theme, campaign, or page goals.
 - Cache AI-generated asset descriptions and embedding vectors to improve future retrieval; consider using the Entity API to store AI annotations on Media entities.
 - Expose asset selection APIs that return thumbnails, metadata, usage counts, and licensing notes to the assistant interface.
+- Synchronize image style definitions via Drupal’s `image_style` configuration entities so the assistant can list, duplicate, and version styles programmatically.
+- Bundle common media-focused contributed modules (Focal Point, Image Widget Crop, Media Library Edit, Responsive Image, ImageAPI Optimize, Image Effects) and expose their capabilities through a single media service layer.
+- Persist rich metadata (subjects, colors, people, moods, campaign tags) within structured fields and taxonomies; store optional text embeddings alongside to support semantic lookup when enabled.
+- Start with Drupal Search API + taxonomy filters for Phase I, but design adapters that can swap in a vector database (e.g., OpenSearch k-NN, Pinecone) when semantic search needs exceed relational queries.
 
 ## AI Enablement Strategy
 
@@ -22,6 +26,8 @@
 - Persist conversation state per page session in Drupal or an auxiliary datastore so AI responses remain contextual across user interactions.
 - Introduce guardrails such as schema validation, toxicity filters, and maximum token limits before writing generated content to Drupal entities.
 - Collect feedback signals (accept/reject, manual edits) to refine future prompts and optionally retrain fine-tuned models or retrieval indexes.
+- Run background AI services (captioning, keyword extraction, alt-text drafting) when new images are uploaded, and store scores that indicate confidence and moderation status.
+- Isolate optional Phase II image generation (Google Gemini or comparable) behind feature flags and budget guardrails; generated variants must link back to the originating asset and prompt payload.
 
 ## Theming and Style Alignment
 
@@ -54,4 +60,5 @@
 - Which AI vendors meet the organization’s compliance requirements, and what fallbacks exist if quotas are exhausted?
 - How should conflicts be resolved when multiple editors request AI changes to the same block simultaneously?
 - Is additional training or change management required for editors to trust and effectively use the assistant?
-
+- What criteria (asset volume, search latency, personalization needs) should trigger investment in a dedicated vector store versus continuing with relational metadata queries?
+- How will licensing, watermarking, and PII concerns be handled for AI-generated imagery introduced in Phase II?
