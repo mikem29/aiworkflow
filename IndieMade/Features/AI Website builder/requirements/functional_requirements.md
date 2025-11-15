@@ -7,6 +7,16 @@
 - The system must support bulk upload (drag-and-drop or multi-select) with progress indicators and error handling for unsupported file types.
 - Editors must be able to search, filter, and reuse assets across pages; AI suggestions should surface relevant existing assets before requesting new uploads.
 - AI-generated alt text or summaries must be presented as suggestions that editors can accept or edit before saving the media entity.
+- The asset manager shall launch as a modal Media Library experience so editors can add, browse, and attach images without leaving the assistant workspace.
+- Editors must be able to review existing Drupal image styles, preview how a style affects an asset, and request new styles that route to site builders for approval.
+- Inline editing tools (crop, rotate, focal point selection, simple color adjustments) must be available during upload and on subsequent edits, with changes tracked as Media revisions.
+- The assistant should leverage a curated plugin stack—Focal Point, Image Widget Crop, Media Library Edit, Responsive Image, ImageAPI Optimize, and Image Effects—to satisfy style previews, responsive variants, optimization, and quick edits.
+- Image metadata (alt text, focal subject, detected people/objects, licensing notes, campaign tags) must be captured in structured fields so conversational prompts can target assets precisely.
+- AI metadata suggestions (captions, keywords, accessibility descriptions) must surface with confidence scores and require human confirmation before persistence.
+- Phase delivery:
+  - **Phase I** focuses on reliable upload, editing, metadata enrichment, and reuse of human-supplied assets.
+  - **Phase II** introduces optional AI image generation (e.g., Google Gemini) plus advanced semantic search powered by stored embeddings.
+- The assistant must expose conversational commands that map to predefined image style recipes (e.g., “apply the hero banner crop”) while preserving the original source asset for rollback.
 
 ## Page and Block Lifecycle
 
@@ -44,4 +54,3 @@
 - Flag potential compliance risks (e.g., unverified claims, missing legal disclaimers) and route them to designated reviewers.
 - Provide exportable audit logs capturing AI prompts, generated outputs, manual edits, and reviewer approvals for each publishing cycle.
 - Ensure generated content respects localization settings (language, date formats) and allow editors to request localized variants per block.
-
