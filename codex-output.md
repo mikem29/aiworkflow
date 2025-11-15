@@ -8,3 +8,6 @@
 
 **Next Steps**
 1. Align with Drupal site builders on the recommended plugin stack and confirm Phase II sequencing before implementation.
+- Added `consulting_recommendations.md` with audience-aware feature ideas covering onboarding tone, conversational “Add page” flow, block reuse discovery, commerce helpers, trust-building education, and operational follow-ups tailored to non-technical Etsy makers (IndieMade/Features/AI Website builder/requirements/consulting_recommendations.md:1).
+
+Next steps: 1) Review the recommendations with product/design to pick near-term roadmap items. 2) Map each idea to existing requirements to flag dependencies or gaps before implementation.
