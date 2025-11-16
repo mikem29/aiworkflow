@@ -9,10 +9,11 @@ This document narrows the implementation requirements for the Drupal-based AI we
 - **Permissions matrix**:
   - `ai_assistant` role: `create ai_assistant_html_block`, `edit own`, `view own`, `unpublish own`; explicitly deny `delete` to force human-controlled cleanup.
   - Human roles inherit `view`, `edit`, `publish`, `delete` according to existing workflow configuration.
-- **Revision strategy**: Enable revision tracking and moderation states (Draft → Needs Review → Published). Diff viewers must highlight HTML changes per revision.
+- **Revision strategy**: Enable revision tracking and moderation states (Draft → Needs Review → Published). Only persist a revision when an editor approves an AI-proposed change or explicitly requests a checkpoint so the history reflects meaningful milestones. Diff viewers must highlight HTML changes per revision.
+- **Revision retention**: Maintain a bounded set of the most recent approved AI revisions (e.g., last 5–10) flagged for fast lookup so the assistant can surface “last known good” options without trawling the full revision table.
 - **Block registry**: Maintain a lookup table mapping page nodes to the AI-generated block UUIDs so the assistant can safely reuse or update blocks without scanning unrelated content.
 - **Sharing across pages**: Support cloning by copying block entities while preserving provenance metadata; log cross-page usage for audit trails.
-- **Undo & rollback**: Expose a “Revert to prior AI revision” action powered by Drupal’s revision API and restricted to editors above a defined permission level.
+- **Undo & rollback**: Expose a conversational “Revert to prior AI revision” flow where the assistant surfaces the stored checkpoints, confirms the target with the editor, and issues the Drupal revision revert on the custom `ai_assistant_html_block` entity once approved. Note that complementary CSS rollback controls already exist in the stylesheet management requirements—rolling back HTML must coordinate with those styles when both changed together.
 
 ## 2. HTML Generation Guardrails
 

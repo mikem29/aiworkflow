@@ -1,4 +1,4 @@
-Added a second-generation stylesheet management spec that keeps AI free to author bespoke CSS while detailing sandboxed storage and automated validation guardrails.  
-- `IndieMade/Features/AI Website builder/requirements/stylesheet_management_spec_v2.md:1` introduces end-to-end flow for AI CSS drafting, jailed filesystem/database storage choices, parser-based validation, manifest-driven delivery, and phased rollout guidance.
+- Updated the block revision requirements so only approved or checkpointed changes persist, ensuring the AI keeps a manageable set of recent revisions it can surface later (`IndieMade/Features/AI Website builder/requirements/ai_block_management_spec.md:12-16`).
+- Documented the conversational rollback flow where the assistant reverts the `ai_assistant_html_block` via Drupal revisions and called out the existing CSS rollback guardrails for coordinated restores (`IndieMade/Features/AI Website builder/requirements/ai_block_management_spec.md:16`).
 
-Possible next steps: 1) Review with product/design stakeholders to confirm this replaces the v1 governance model.
+Possible next step: 1) Align the Drupal moderation workflow to enforce the chosen revision cap and editor approval trigger.
