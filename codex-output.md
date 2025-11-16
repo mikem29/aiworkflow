@@ -1,13 +1,4 @@
-**Updates**
-- Expanded README with media manager roadmap, plugin recommendations, and AI-enabled search guidance to satisfy the new requirement (IndieMade/Features/AI Website builder/README.md:3).
-- Broadened Asset Intake requirements to cover the media-library modal, image style workflows, curated plugin stack, rich metadata, and phased Gemini rollout (IndieMade/Features/AI Website builder/requirements/functional_requirements.md:10).
-- Added technical guidance for managing image style configuration, exposing media plugins, planning metadata + vector search, and guarding AI captioning/generation (IndieMade/Features/AI Website builder/requirements/technical_considerations.md:17).
+Added a second-generation stylesheet management spec that keeps AI free to author bespoke CSS while detailing sandboxed storage and automated validation guardrails.  
+- `IndieMade/Features/AI Website builder/requirements/stylesheet_management_spec_v2.md:1` introduces end-to-end flow for AI CSS drafting, jailed filesystem/database storage choices, parser-based validation, manifest-driven delivery, and phased rollout guidance.
 
-**Testing**
-- Not run (documentation-only changes).
-
-**Next Steps**
-1. Align with Drupal site builders on the recommended plugin stack and confirm Phase II sequencing before implementation.
-- Added `consulting_recommendations.md` with audience-aware feature ideas covering onboarding tone, conversational “Add page” flow, block reuse discovery, commerce helpers, trust-building education, and operational follow-ups tailored to non-technical Etsy makers (IndieMade/Features/AI Website builder/requirements/consulting_recommendations.md:1).
-
-Next steps: 1) Review the recommendations with product/design to pick near-term roadmap items. 2) Map each idea to existing requirements to flag dependencies or gaps before implementation.
+Possible next steps: 1) Review with product/design stakeholders to confirm this replaces the v1 governance model.
